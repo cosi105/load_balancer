@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'httparty'
 gem 'minitest'
-gem 'unicorn'
+gem 'puma'
 gem 'rack'
 gem 'rack-test'
 gem 'rake'
