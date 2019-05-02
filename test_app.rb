@@ -1,4 +1,4 @@
-# Searcher Micro-Service (port 8083)
+# Simple app to test load balancer
 
 require 'sinatra'
 PORT = ARGV[0].to_i
