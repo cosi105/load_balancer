@@ -5,13 +5,14 @@ Bundler.require
 
 if Sinatra::Base.production?
   SERVERS = ENV['SERVERS'].split
+  # Wake up all servers
+  SERVERS.each { |server| Thread.new { HTTParty.get(server) } }
 else
   set :port, 1111
   ports = [4567, 4568]
   SERVERS = ports.map { |port| "http://localhost:#{port}" }
 end
 
-SERVERS.each { |server| Thread.new { HTTParty.get(server) } }
 
 get %r{\/.*} do
   server = SERVERS.sample
