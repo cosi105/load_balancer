@@ -10,8 +10,7 @@ def app
 end
 
 def collect_resps
-  resps = []
-  100.times { resps << yield.body }
+  resps = Array.new(100) { yield.body }
   resps.uniq.sort
 end
 
