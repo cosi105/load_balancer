@@ -1,11 +1,3 @@
-# This file is a DRY way to set all of the requirements
-# that our tests will need, as well as a before statement
-# that purges the database and creates fixtures before every test
-
-PORTS = [4567, 4568].freeze
-PORTS.each { |i| Process.spawn("ruby test_app.rb #{i} &") }
-sleep 3
-
 ENV['APP_ENV'] = 'test'
 require 'simplecov'
 SimpleCov.start
@@ -17,6 +9,15 @@ def app
   Sinatra::Application
 end
 
+def collect_resps
+  resps = []
+  100.times { resps << yield.body }
+  resps.uniq.sort
+end
+
+PORTS = [4567, 4568].freeze
+PORTS.each { |i| Process.spawn("ruby test_app.rb #{i} &") }
+sleep 3
 
 describe 'NanoTwitter Load Balancer' do
   include Rack::Test::Methods
@@ -26,20 +27,12 @@ describe 'NanoTwitter Load Balancer' do
   end
 
   it 'can get from both nodes' do
-    resps = []
-    100.times do
-      get '/'
-      resps << last_response.body
-    end
-    resps.uniq.sort.must_equal(PORTS.map { |i| "GET:#{i}" })
+    resps = collect_resps { get '/' }
+    resps.must_equal(PORTS.map { |i| "GET:#{i}" })
   end
 
   it 'can post from both nodes' do
-    resps = []
-    100.times do
-      post '/'
-      resps << last_response.body
-    end
-    resps.uniq.sort.must_equal(PORTS.map { |i| "POST:#{i}" })
+    resps = collect_resps { post '/' }
+    resps.must_equal(PORTS.map { |i| "POST:#{i}" })
   end
 end
