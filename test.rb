@@ -2,6 +2,10 @@
 # that our tests will need, as well as a before statement
 # that purges the database and creates fixtures before every test
 
+PORTS = [4567, 4568].freeze
+PORTS.each { |i| Process.spawn("ruby test_app.rb #{i} &") }
+sleep 3
+
 ENV['APP_ENV'] = 'test'
 require 'simplecov'
 SimpleCov.start
@@ -13,15 +17,9 @@ def app
   Sinatra::Application
 end
 
-PORTS = [4567, 4568].freeze
 
 describe 'NanoTwitter Load Balancer' do
   include Rack::Test::Methods
-
-  before(:all) do
-    PORTS.each { |i| Process.spawn("ruby test_app.rb #{i} &") }
-    sleep 3
-  end
 
   after(:all) do
     PORTS.each { |i| HTTParty.get("http://localhost:#{i}/exit") }

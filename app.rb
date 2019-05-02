@@ -11,6 +11,8 @@ else
   SERVERS = ports.map { |port| "http://localhost:#{port}" }
 end
 
+SERVERS.each { |server| Thread.new { HTTParty.get(server) } }
+
 get %r{\/.*} do
   server = SERVERS.sample
   HTTParty.get("#{server}#{request.path}", query: request.params).parsed_response
