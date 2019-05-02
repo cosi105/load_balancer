@@ -13,6 +13,8 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2019.0331)
     minitest (5.11.3)
+    minitest-hooks (1.5.0)
+      minitest (> 5.3)
     multi_xml (0.6.0)
     mustermann (1.0.3)
     pry (0.12.2)
@@ -46,6 +48,7 @@ PLATFORMS
 DEPENDENCIES
   httparty
   minitest
+  minitest-hooks
   pry-byebug
   puma
   rack

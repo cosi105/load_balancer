@@ -1,4 +1,4 @@
-# Searcher Micro-Service (port 8083)
+# Load Balancer Micro-Service (port 1111)
 
 require 'bundler'
 Bundler.require
@@ -7,7 +7,8 @@ if Sinatra::Base.production?
   SERVERS = ENV['SERVERS'].split
 else
   set :port, 1111
-  SERVERS = %w[http://localhost:4567 http://localhost:4568]
+  ports = [4567, 4568]
+  SERVERS = ports.map { |port| "http://localhost:#{port}" }
 end
 
 get %r{\/.*} do
